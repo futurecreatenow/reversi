@@ -47,7 +47,7 @@ void show(){
     printf("################\n");
 }
 void select(){
-    //置ける場所を表示させる
+    //置ける場所を表示させる：検討中
     printf("your turn>>>o");
 
 
