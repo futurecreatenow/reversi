@@ -1,20 +1,53 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "board.h"
-#include "show.c"
-#include "judge.c"
 #define FULL_CELL 16
+#define BOARD_SIDE 4
 
-enum board_num {ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,TEN,
-                ELE,TWE,THI,FOURTE,FIF,SIXTE};
-enum status_num {ME_0,UNDECIDED_1,PC_2};
-struct BOARD board[FULL_CELL] =     {{ONE,UNDECIDED_1},{TWO,UNDECIDED_1},{THREE,UNDECIDED_1},{FOUR,UNDECIDED_1},
-                                    {FIVE,UNDECIDED_1},{SIX,PC_2},{SEVEN,ME_0},{EIGHT,UNDECIDED_1},
-                                    {NINE,UNDECIDED_1},{TEN,ME_0},{ELE,PC_2},{TWE,UNDECIDED_1},
-                                    {THI,UNDECIDED_1},{FOURTE,UNDECIDED_1},{FIF,UNDECIDED_1},{SIXTE,UNDECIDED_1}};
+enum board_num {ZERO,ONE,TWO,THREE,FOUR};
+enum status_num {UNDECIDED_0,ME_1,PC_2};
+int board[BOARD_SIDE][BOARD_SIDE] = {UNDECIDED_0}; 
 
 
+void setup(void);
+void show(void);
+void select(void);
 void main(void) {
-    show();
-    judge();
+    struct BOARD board;
+    board.turn = true;
+    setup(); //最初の〇×を配置
+    show(); //碁盤を表示
+    if (board.turn == true)select(); //置ける碁盤を表示
+    else printf("PC_turn");
+    
+}
+void setup(){
+    //〇の表示
+    board[ONE][TWO] = ME_1;board[TWO][ONE] = ME_1;
+    //×の表示
+    board[ONE][ONE] = PC_2;board[TWO][TWO] = PC_2;
+}
+void show(){
+    printf("################\n");
+    for (int  i = 0; i < BOARD_SIDE; i++)
+    {
+        for (int j = 0; j < BOARD_SIDE; j++)
+        {
+            switch (board[i][j])
+            {
+                case ME_1:printf("o");break;
+                case PC_2:printf("x");break;
+                case UNDECIDED_0:printf("-");break;
+                default:break;
+            }
+            
+        }
+        printf("\n");
+    }
+    printf("################\n");
+}
+void select(){
+    printf("your turn>>>o");
+
+
 }
