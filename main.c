@@ -47,7 +47,7 @@ void show(){
     printf("################\n");
 }
 void select(){
-    //置ける場所を表示させる>>>branch_
+    //置ける場所を表示させる>>>branchで作成します
     printf("your turn>>>o");
 
 
