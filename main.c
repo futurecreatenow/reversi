@@ -11,14 +11,13 @@ int board[BOARD_SIDE][BOARD_SIDE] = {UNDECIDED_0};
 
 void setup(void);
 void show(void);
-void select(void);
+void select(struct BOARD *board);
 void main(void) {
     struct BOARD board;
     board.turn = true;
     setup(); //最初の〇×を配置
     show(); //碁盤を表示
-    if (board.turn == true)select(); //置ける碁盤を表示
-    else printf("PC_turn");
+    select(&board); //置ける碁盤を表示
     
 }
 void setup(){
@@ -46,9 +45,10 @@ void show(){
     }
     printf("################\n");
 }
-void select(){
+void select(struct BOARD *board_){
     //置ける場所を表示させる>>>branchで作成します
-    printf("your turn>>>o");
+    if (board_->turn == true)printf("your turn>>>input o\n"),printf("[line][col]\n");
+    else printf("PC turn>>>o"); //2024/3/5
 
 
 }
