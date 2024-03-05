@@ -48,7 +48,7 @@ void show(){
 void select(struct BOARD *board_){
     //置ける場所を表示させる>>>branchで作成します
     if (board_->turn == true)printf("your turn>>>input o\n"),printf("[line][col]\n");
-    else printf("PC turn>>>o"); //2024/3/5
+    else printf("PC turn>>>o"); //2024/3/5 
 
 
 }
