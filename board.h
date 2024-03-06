@@ -6,5 +6,7 @@
 struct BOARD
 {
     bool turn;
+    int line;
+    int col;
 };
 #endif
