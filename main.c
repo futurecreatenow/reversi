@@ -6,20 +6,22 @@
 
 enum board_num {ZERO,ONE,TWO,THREE,FOUR};
 enum status_num {UNDECIDED_0,ME_1,PC_2};
-int board[BOARD_SIDE][BOARD_SIDE] = {UNDECIDED_0}; 
+int board[BOARD_SIDE][BOARD_SIDE] = {UNDECIDED_0};
 
 
 void setup(void);
 void show(void);
 void select(struct BOARD *board);
 void reverse(struct BOARD *board);
+void judge(struct BOARD *board);
 void main(void) {
     struct BOARD board;
     board.turn = true;
     setup(); //最初の〇×を配置
     show(); //碁盤を表示
     select(&board); //置けるマス目を選択
-    reverse(&board);
+    reverse(&board); //碁盤をひっくり返す
+    judge(&board);
     show();
 }
 
@@ -270,5 +272,37 @@ void reverse(struct BOARD *board_){
             && board[board_->line - 3][board_->col] == ME_1)
             board[board_->line - 1][board_->col] = ME_1,
             board[board_->line - 2][board_->col] = ME_1;
+
+}
+void judge(struct BOARD *board_){
+    int me_num = 0,pc_num = 0,undecide = 0;
+    for (int  i = 0; i < BOARD_SIDE; i++)
+    {
+        for (int j = 0; j < BOARD_SIDE; j++)
+        {
+            switch (board[j][i])
+            {
+                case ME_1:me_num++;break;
+                case PC_2:pc_num++;break;
+                case UNDECIDED_0:undecide++;break;
+                default:break;
+            }
+            
+        }
+    }
+    if(undecide == 0) 
+    {
+        printf("finish\n");
+        if (me_num > pc_num)
+        {
+            printf("you win\n");
+        }else if (me_num == pc_num){
+            printf("draw");
+        }else{
+            printf("you lose");
+        }
+        
+    }
+    printf("o >>>%d,x >>>%d\n",me_num,pc_num);
 
 }
