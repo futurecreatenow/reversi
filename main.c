@@ -98,55 +98,84 @@ void select(struct BOARD *board_){
             //斜め
                 if (board_->line ==  0 && board_->col == 0){
                     if (board[1][1] == PC_2 && board[2][2] == PC_2 && board[3][3] == ME_1)
-                            printf("OK_diagonal_01\n"),
+                            select_flag = true;
+                    
+                    if (board[1][1] == PC_2 && board[2][2] == ME_1)
                             select_flag = true;
                 }
 
+                if (board_->line == 2 && board_->col == 2)
+                {
+                    if (board[0][0] == ME_1 && board[1][1] == PC_2)
+                    {
+                        select_flag = true;
+                    }
+                    
+                }
+                
 
                 if (board_->line ==  3 && board_->col == 3){
                     if (board[1][1] == PC_2 && board[2][2] == PC_2 && board[0][0] == ME_1)
-                            printf("OK_diagonal_02\n"),
+                            select_flag = true;
+                    if (board[1][1] == ME_1 && board[2][2] == PC_2)
                             select_flag = true;
                 }
-                        
+                if (board_->line == 1 && board_->col == 1)
+                {
+                    if (board[3][3] == ME_1 && board[2][2] == PC_2)
+                    {
+                        select_flag = true;
+                    }
+                    
+                }
+
                 if (board_->line ==  3 && board_->col == 0){
                     if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[0][3] == ME_1)
-                            printf("OK_diagonal_03\n"),
+                            select_flag = true;
+                    if (board[1][2] == ME_1 && board[2][1] == PC_2)
                             select_flag = true;
                 }
-                        
+                if (board_->line == 1 && board_->col == 2)
+                {
+                    if (board[3][0] == ME_1 && board[2][1] == PC_2)
+                    {
+                        select_flag = true;
+                    }
+                    
+                }
+        
                 if (board_->line ==  0 && board_->col == 3){
                     if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[3][0] == ME_1)
-                            printf("OK_diagonal_04\n"),
+                            select_flag = true;
+                    if (board[2][1] == ME_1 && board[1][2] == PC_2)
                             select_flag = true;
                 }
-
-
-
-
+                if (board_->line == 2 && board_->col == 1)
+                {
+                    if (board[0][3] == ME_1 && board[1][2] == PC_2)
+                    {
+                        select_flag = true;
+                    }
+                    
+                }
                 
                 //縦列　下に×が存在
-                
                 if (board[board_->line][board_->col + 1] == PC_2
                     && board[board_->line][board_->col + 2] == ME_1)
-                        
-                            printf("OK_line_under_01\n"),
-                            select_flag = true;
+                        select_flag = true;
                             
                         
                 if (board[board_->line][board_->col + 1] == PC_2
                         && board[board_->line][board_->col + 2] == PC_2
                         && board[board_->line][board_->col + 3] == ME_1)
-                        
-                            printf("OK_line_under_02\n"),
-                            select_flag = true;
+                        select_flag = true;
                             
                 //縦列　上に×が存在
                 
                 if (board[board_->line][board_->col - 1] == PC_2
                     && board[board_->line][board_->col - 2] == ME_1)
                         
-                            printf("OK_line_over_01\n"),
+                            
                             select_flag = true;
                             
                         
@@ -154,7 +183,7 @@ void select(struct BOARD *board_){
                         && board[board_->line][board_->col - 2] == PC_2
                         && board[board_->line][board_->col - 3] == ME_1)
                         
-                            printf("OK_line_over_02\n"),
+                            
                             select_flag = true;
 
                 //横列　右に×が存在
@@ -162,7 +191,7 @@ void select(struct BOARD *board_){
                 if (board[board_->line + 1  ][board_->col] == PC_2
                     && board[board_->line + 2][board_->col] == ME_1)
                         
-                            printf("OK_col_right_01\n"),
+                            
                             select_flag = true;
                             
                         
@@ -170,7 +199,7 @@ void select(struct BOARD *board_){
                         && board[board_->line + 2][board_->col] == PC_2
                         && board[board_->line + 3][board_->col] == ME_1)
                         
-                            printf("OK_col_right_02\n"),
+                            
                             select_flag = true;
                             
                 //横列　左に×が存在
@@ -178,7 +207,7 @@ void select(struct BOARD *board_){
                 if (board[board_->line - 1  ][board_->col] == PC_2
                     && board[board_->line - 2][board_->col] == ME_1)
                         
-                            printf("OK_col_left_01\n"),
+                            
                             select_flag = true;
                             
                             
@@ -187,7 +216,7 @@ void select(struct BOARD *board_){
                         && board[board_->line - 2][board_->col] == PC_2
                         && board[board_->line - 3][board_->col] == ME_1)
                         
-                            printf("OK_col_left_02\n"),
+                            
                             select_flag = true;
 
                 
@@ -207,29 +236,61 @@ void select(struct BOARD *board_){
 }
 void reverse(struct BOARD *board_){
     board[board_->line][board_->col] = ME_1;
+    
 
     //斜め
 
     
     if (board_->line ==  0 && board_->col == 0){
         if (board[1][1] == PC_2 && board[2][2] == PC_2 && board[3][3] == ME_1)
-            board[1][1] == ME_1,board[2][2] == ME_1;
+            board[1][1] = ME_1,board[2][2] = ME_1;
+        if (board[1][1] == PC_2 && board[2][2] == ME_1)
+            board[1][1] = ME_1;
     }
-
+    if (board_->line == 2 && board_->col == 2)
+    {
+        if (board[0][0] == ME_1 && board[1][1] == PC_2)
+            board[1][1] = ME_1;
+        
+    }
 
     if (board_->line ==  3 && board_->col == 3){
         if (board[1][1] == PC_2 && board[2][2] == PC_2 && board[3][3] == ME_1)
-            board[1][1] == ME_1,board[2][2] == ME_1;
+            board[1][1] = ME_1,board[2][2] = ME_1;
+        if (board[1][1] == ME_1 && board[2][2] == PC_2)
+            board[2][2] = ME_1;
     }
-            
+    if (board_->line == 1 && board_->col == 1)
+    {
+        if (board[3][3] == ME_1 && board[2][2] == PC_2)
+            board[2][2] = ME_1;
+        
+    }
+
     if (board_->line ==  3 && board_->col == 0){
         if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[0][3] == ME_1)
-            board[2][1] == ME_1,board[1][2] == ME_1;
+            board[2][1] = ME_1,board[1][2] = ME_1;
+        if (board[1][2] == ME_1 && board[2][1] == PC_2)
+            board[2][1] = ME_1;
     }
-            
+    if (board_->line == 1 && board_->col == 2)
+    {
+        if (board[3][0] == ME_1 && board[2][1] == PC_2)
+            board[2][1] = ME_1;
+        
+    }
+
     if (board_->line ==  0 && board_->col == 3){
         if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[3][0] == ME_1)
-            board[2][1] == ME_1,board[1][2] == ME_1;
+            board[2][1] = ME_1,board[1][2] = ME_1;
+        if (board[2][1] == ME_1 && board[1][2] == PC_2)
+            board[1][2] = ME_1;
+    }
+    if (board_->line == 2 && board_->col == 1)
+    {
+        if (board[0][3] == ME_1 && board[1][2] == PC_2)
+            board[1][2] = ME_1;
+        
     }
 
 
