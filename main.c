@@ -90,6 +90,13 @@ void select(struct BOARD *board_){
         scanf("%d",&board_->line);
         printf("select col(0-3)>>>\n");
         scanf("%d",&board_->col);
+        if (board[board_->line][board_->col] == ME_1 ||
+            board[board_->line][board_->col] == PC_2)
+        {
+            select_flag = false;
+            continue;
+        }
+        
         if (board_->line == 0 || board_->line == 1 || board_->line == 2 || board_->line == 3 ||
             board_->col == 0 || board_->col == 1 || board_->col == 2 || board_->col == 3 )
             {
@@ -351,6 +358,8 @@ void reverse(struct BOARD *board_){
             board[board_->line - 2][board_->col] = ME_1;
 
 }
+
+
 void stone_sum(struct BOARD *board_){
     int me_num = 0,pc_num = 0,undecide = 0;
     for (int  i = 0; i < BOARD_SIDE; i++)
@@ -534,4 +543,7 @@ void pc_put(){
             board[pc_line - 1][pc_col] = PC_2,
             board[pc_line - 2][pc_col] = PC_2;
 
+
+    pc_line = -1;
+    pc_col = -1;
 }
