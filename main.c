@@ -28,8 +28,8 @@ void main(void) {
     {
         select(&board); //置けるマス目を選択
         reverse(&board); //碁盤をひっくり返す
-        show(); 
         stone_sum(&board); //碁盤の合計計算
+        show();
         pc_expe(); //pcの置く場所の候補を決める
         pc_put(); //pcの碁盤を置く
         show();
@@ -97,8 +97,7 @@ void select(struct BOARD *board_){
             continue;
         }
         
-        if (board_->line == 0 || board_->line == 1 || board_->line == 2 || board_->line == 3 ||
-            board_->col == 0 || board_->col == 1 || board_->col == 2 || board_->col == 3 )
+        if (board[board_->line][board_->col] == UNDECIDED_0 )
             {
             
 
@@ -137,61 +136,51 @@ void select(struct BOARD *board_){
                 }
 
                 if (board_->line ==  3 && board_->col == 0){
-                    if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[0][3] == ME_1)
-                            select_flag = true;
-                    if (board[1][2] == ME_1 && board[2][1] == PC_2)
-                            select_flag = true;
+                    if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[0][3] == ME_1) select_flag = true;
+                    if (board[1][2] == ME_1 && board[2][1] == PC_2) select_flag = true;
                 }
+
                 if (board_->line == 1 && board_->col == 2)
                 {
-                    if (board[3][0] == ME_1 && board[2][1] == PC_2)
-                    {
-                        select_flag = true;
-                    }
-                    
+                    if (board[3][0] == ME_1 && board[2][1] == PC_2) select_flag = true;
+                                        
                 }
         
                 if (board_->line ==  0 && board_->col == 3){
-                    if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[3][0] == ME_1)
-                            select_flag = true;
-                    if (board[2][1] == ME_1 && board[1][2] == PC_2)
-                            select_flag = true;
+                    if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[3][0] == ME_1) select_flag = true;
+                    if (board[2][1] == ME_1 && board[1][2] == PC_2) select_flag = true;
                 }
+
                 if (board_->line == 2 && board_->col == 1)
                 {
-                    if (board[0][3] == ME_1 && board[1][2] == PC_2)
-                    {
-                        select_flag = true;
-                    }
+                    if (board[0][3] == ME_1 && board[1][2] == PC_2) select_flag = true;
                     
                 }
+
+
+                //斜め右下と左上
+                if (board[board_->line + 1][board_->col + 1] == PC_2 && board[board_->line + 2][board_->col + 2] == ME_1) select_flag = true;
+                if (board[board_->line - 1][board_->col - 1] == PC_2 && board[board_->line - 2][board_->col - 2] == ME_1) select_flag = true;
+
+                //斜め左下と右上
+                if (board[board_->line - 1][board_->col + 1] == PC_2 && board[board_->line - 2][board_->col + 2] == ME_1) select_flag = true;
+                if (board[board_->line + 1][board_->col - 1] == PC_2 && board[board_->line + 2][board_->col - 2] == ME_1) select_flag = true;
+
                 
                 //縦列　下に×が存在
-                if (board[board_->line][board_->col + 1] == PC_2
-                    && board[board_->line][board_->col + 2] == ME_1)
-                        select_flag = true;
-                            
+                if (board[board_->line][board_->col + 1] == PC_2 && board[board_->line][board_->col + 2] == ME_1) select_flag = true;
                         
-                if (board[board_->line][board_->col + 1] == PC_2
-                        && board[board_->line][board_->col + 2] == PC_2
-                        && board[board_->line][board_->col + 3] == ME_1)
+                if (board[board_->line][board_->col + 1] == PC_2 && board[board_->line][board_->col + 2] == PC_2 
+                    && board[board_->line][board_->col + 3] == ME_1)
                         select_flag = true;
                             
                 //縦列　上に×が存在
                 
-                if (board[board_->line][board_->col - 1] == PC_2
-                    && board[board_->line][board_->col - 2] == ME_1)
-                        
-                            
-                            select_flag = true;
+                if (board[board_->line][board_->col - 1] == PC_2 && board[board_->line][board_->col - 2] == ME_1) select_flag = true;
                             
                         
-                if (board[board_->line][board_->col - 1] == PC_2
-                        && board[board_->line][board_->col - 2] == PC_2
-                        && board[board_->line][board_->col - 3] == ME_1)
-                        
-                            
-                            select_flag = true;
+                if (board[board_->line][board_->col - 1] == PC_2 && board[board_->line][board_->col - 2] == PC_2
+                    && board[board_->line][board_->col - 3] == ME_1)select_flag = true;
 
                 //横列　右に×が存在
                 
@@ -226,14 +215,6 @@ void select(struct BOARD *board_){
                             
                             select_flag = true;
 
-                
-                if (select_flag == true)
-                {
-                    printf("Your choice is correct\n");
-                }
-                else{
-                    printf("Your choice is incorrect\n");
-                }
             }
 
         else printf("your select is not correct\n");
@@ -245,117 +226,98 @@ void reverse(struct BOARD *board_){
     board[board_->line][board_->col] = ME_1;
     
 
-    //斜め
-
-    
+    //斜め 対角線上    
     if (board_->line ==  0 && board_->col == 0){
-        if (board[1][1] == PC_2 && board[2][2] == PC_2 && board[3][3] == ME_1)
-            board[1][1] = ME_1,board[2][2] = ME_1;
-        if (board[1][1] == PC_2 && board[2][2] == ME_1)
-            board[1][1] = ME_1;
+        if (board[1][1] == PC_2 && board[2][2] == PC_2 && board[3][3] == ME_1)  board[1][1] = ME_1,board[2][2] = ME_1;
+        if (board[1][1] == PC_2 && board[2][2] == ME_1) board[1][1] = ME_1;
     }
     if (board_->line == 2 && board_->col == 2)
     {
-        if (board[0][0] == ME_1 && board[1][1] == PC_2)
-            board[1][1] = ME_1;
+        if (board[0][0] == ME_1 && board[1][1] == PC_2)  board[1][1] = ME_1;
         
     }
 
     if (board_->line ==  3 && board_->col == 3){
-        if (board[1][1] == PC_2 && board[2][2] == PC_2 && board[3][3] == ME_1)
-            board[1][1] = ME_1,board[2][2] = ME_1;
-        if (board[1][1] == ME_1 && board[2][2] == PC_2)
-            board[2][2] = ME_1;
+        if (board[1][1] == PC_2 && board[2][2] == PC_2 && board[3][3] == ME_1)  board[1][1] = ME_1,board[2][2] = ME_1;
+        if (board[1][1] == ME_1 && board[2][2] == PC_2) board[2][2] = ME_1;
     }
     if (board_->line == 1 && board_->col == 1)
     {
-        if (board[3][3] == ME_1 && board[2][2] == PC_2)
-            board[2][2] = ME_1;
+        if (board[3][3] == ME_1 && board[2][2] == PC_2) board[2][2] = ME_1;
         
     }
 
     if (board_->line ==  3 && board_->col == 0){
-        if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[0][3] == ME_1)
-            board[2][1] = ME_1,board[1][2] = ME_1;
-        if (board[1][2] == ME_1 && board[2][1] == PC_2)
-            board[2][1] = ME_1;
+        if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[0][3] == ME_1)  board[2][1] = ME_1,board[1][2] = ME_1;
+        if (board[1][2] == ME_1 && board[2][1] == PC_2) board[2][1] = ME_1;
     }
     if (board_->line == 1 && board_->col == 2)
     {
-        if (board[3][0] == ME_1 && board[2][1] == PC_2)
-            board[2][1] = ME_1;
+        if (board[3][0] == ME_1 && board[2][1] == PC_2) board[2][1] = ME_1;
         
     }
 
     if (board_->line ==  0 && board_->col == 3){
-        if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[3][0] == ME_1)
-            board[2][1] = ME_1,board[1][2] = ME_1;
-        if (board[2][1] == ME_1 && board[1][2] == PC_2)
-            board[1][2] = ME_1;
+        if (board[2][1] == PC_2 && board[1][2] == PC_2 && board[3][0] == ME_1)  board[2][1] = ME_1,board[1][2] = ME_1;
+        if (board[2][1] == ME_1 && board[1][2] == PC_2)  board[1][2] = ME_1;
     }
     if (board_->line == 2 && board_->col == 1)
     {
-        if (board[0][3] == ME_1 && board[1][2] == PC_2)
-            board[1][2] = ME_1;
+        if (board[0][3] == ME_1 && board[1][2] == PC_2)  board[1][2] = ME_1;
         
     }
+    //斜め右下と左上
+    if (board[board_->line + 1][board_->col + 1] == PC_2 && board[board_->line + 2][board_->col + 2] == ME_1) board[board_->line + 1][board_->col + 1] = ME_1;
+    if (board[board_->line - 1][board_->col - 1] == PC_2 && board[board_->line - 2][board_->col - 2] == ME_1) 
+                board[board_->line - 1][board_->col - 1] = ME_1;
 
+    //斜め左下と右上
+    if (board[board_->line - 1][board_->col + 1] == PC_2 && board[board_->line - 2][board_->col + 2] == ME_1) board[board_->line - 1][board_->col + 1] = ME_1;
+    if (board[board_->line + 1][board_->col - 1] == PC_2 && board[board_->line + 2][board_->col - 2] == ME_1) board[board_->line + 1][board_->col - 1] = ME_1;
 
 
 
     
     //縦列　下に×が存在
     
-    if (board[board_->line][board_->col + 1] == PC_2
-        && board[board_->line][board_->col + 2] == ME_1)
+    if (board[board_->line][board_->col + 1] == PC_2 && board[board_->line][board_->col + 2] == ME_1)
         board[board_->line][board_->col + 1] = ME_1;
                 
             
-    if (board[board_->line][board_->col + 1] == PC_2
-            && board[board_->line][board_->col + 2] == PC_2
+    if (board[board_->line][board_->col + 1] == PC_2  && board[board_->line][board_->col + 2] == PC_2
             && board[board_->line][board_->col + 3] == ME_1)
-            board[board_->line][board_->col + 1] = ME_1,
-            board[board_->line][board_->col + 2] = ME_1;
+            board[board_->line][board_->col + 1] = ME_1, board[board_->line][board_->col + 2] = ME_1;
                 
     //縦列　上に×が存在
     
-    if (board[board_->line][board_->col - 1] == PC_2
-        && board[board_->line][board_->col - 2] == ME_1)
+    if (board[board_->line][board_->col - 1] == PC_2  && board[board_->line][board_->col - 2] == ME_1)
             board[board_->line][board_->col - 1] = ME_1;
                                 
             
-    if (board[board_->line][board_->col - 1] == PC_2
-            && board[board_->line][board_->col - 2] == PC_2
+    if (board[board_->line][board_->col - 1] == PC_2  && board[board_->line][board_->col - 2] == PC_2
             && board[board_->line][board_->col - 3] == ME_1)
-            board[board_->line][board_->col - 1] = ME_1,
-            board[board_->line][board_->col - 2] = ME_1;
+            board[board_->line][board_->col - 1] = ME_1, board[board_->line][board_->col - 2] = ME_1;
                 
     //横列　右に×が存在
     
-    if (board[board_->line + 1  ][board_->col] == PC_2
-        && board[board_->line + 2][board_->col] == ME_1)
+    if (board[board_->line + 1  ][board_->col] == PC_2 && board[board_->line + 2][board_->col] == ME_1)
         board[board_->line + 1  ][board_->col] = ME_1;
                                 
             
-    if (board[board_->line + 1][board_->col ]== PC_2
-            && board[board_->line + 2][board_->col] == PC_2
+    if (board[board_->line + 1][board_->col ]== PC_2 && board[board_->line + 2][board_->col] == PC_2
             && board[board_->line + 3][board_->col] == ME_1)
-            board[board_->line + 1  ][board_->col] = ME_1,
-            board[board_->line + 2  ][board_->col] = ME_1;
+            board[board_->line + 1  ][board_->col] = ME_1, board[board_->line + 2  ][board_->col] = ME_1;
                 
     //横列　左に×が存在
     
-    if (board[board_->line - 1  ][board_->col] == PC_2
-        && board[board_->line - 2][board_->col] == ME_1)
+    if (board[board_->line - 1  ][board_->col] == PC_2 && board[board_->line - 2][board_->col] == ME_1)
         board[board_->line - 1][board_->col] = ME_1;
                 
                 
             
-    if (board[board_->line - 1][board_->col ]== PC_2
-            && board[board_->line - 2][board_->col] == PC_2
+    if (board[board_->line - 1][board_->col ]== PC_2 && board[board_->line - 2][board_->col] == PC_2
             && board[board_->line - 3][board_->col] == ME_1)
-            board[board_->line - 1][board_->col] = ME_1,
-            board[board_->line - 2][board_->col] = ME_1;
+            board[board_->line - 1][board_->col] = ME_1, board[board_->line - 2][board_->col] = ME_1;
 
 }
 
@@ -408,26 +370,34 @@ void pc_expe(){
             switch (board[j][i])
             {
             case UNDECIDED_0:
-                //斜め
-                if (board[0][0] == PC_2 && board[1][1] == ME_1 && board[2][2] == ME_1 && board[3][3] == PC_2) dia_left++;
-                if (board[3][0] == PC_2 && board[2][1] == ME_1 && board[1][2] == ME_1 && board[3][0] == PC_2) dia_right++;
+                //斜め 対角線
+                if (board[0][0] == PC_2 && board[1][1] == ME_1 && board[2][2] == ME_1 && board[3][3] == PC_2) dia_left = dia_left + 2;
+                if (board[3][0] == PC_2 && board[2][1] == ME_1 && board[1][2] == ME_1 && board[3][0] == PC_2) dia_right = dia_right + 2;
                 
+                //斜め右下と左上
+                if (board[j + 1][i + 1] == ME_1 && board[j + 2][i + 2] == PC_2) dia_left++;
+                if (board[j - 1][i - 1] == ME_1 && board[j - 2][i - 2] == PC_2) dia_left++;
+
+                //斜め左下と右上
+                if (board[j - 1][i + 1] == ME_1 && board[j - 2][i + 2] == PC_2) dia_right++;
+                if (board[j + 1][i - 1] == ME_1 && board[j + 2][i - 2] == PC_2) dia_right++;
+
                 //縦列　下に×が存在
                 if (board[j][i + 1] == ME_1 && board[j][i + 2] == PC_2) line_under++;
-                if (board[j][i + 1] == ME_1 && board[j][i + 2] == ME_1 && board[j][i + 3] == PC_2) line_under++;
+                if (board[j][i + 1] == ME_1 && board[j][i + 2] == ME_1 && board[j][i + 3] == PC_2) line_under = line_under + 2;
 
                 //縦列　上に×が存在
                 if (board[j][i - 1] == ME_1 && board[j][i - 2] == PC_2) line_up++;
-                if (board[j][i - 1] == ME_1 && board[j][i - 2] == ME_1 && board[j][i - 3] == PC_2) line_up++;
+                if (board[j][i - 1] == ME_1 && board[j][i - 2] == ME_1 && board[j][i - 3] == PC_2) line_up = line_up + 2;
 
                 //横列　右に×が存在
                 if (board[j + 1][i] == ME_1 && board[j + 2][i] == PC_2) col_right++;
-                if (board[j + 1][i] == ME_1 && board[j + 2][i] == ME_1 && board[j + 3][i] == PC_2) col_right++;
+                if (board[j + 1][i] == ME_1 && board[j + 2][i] == ME_1 && board[j + 3][i] == PC_2) col_right = col_right + 2;
 
 
                 //横列　左に×が存在
                 if (board[j - 1][i] == ME_1 && board[j - 2][i] == PC_2) col_left++;
-                if (board[j - 1][i] == ME_1 && board[j - 2][i] == ME_1 && board[j - 3][i] == PC_2) col_left++;
+                if (board[j - 1][i] == ME_1 && board[j - 2][i] == ME_1 && board[j - 3][i] == PC_2) col_left = col_left + 2;
 
 
 
@@ -435,7 +405,10 @@ void pc_expe(){
                 score_board[j][i] = stone_sum;
 
                 break;
-            
+            case ME_1:
+                break;
+            case PC_2:
+                break;
             default:
                 break;
             }
@@ -490,60 +463,70 @@ void pc_put(){
             board[2][1] == PC_2,board[1][2] == PC_2;
     }
 
+    //斜め右下と左上
+    if (board[pc_line + 1][pc_col + 1] == ME_1 && board[pc_line + 2][pc_col + 2] == PC_2) board[pc_line + 1][pc_col + 1] = PC_2;
+    if (board[pc_line - 1][pc_col - 1] == ME_1 && board[pc_line - 2][pc_col - 2] == PC_2) board[pc_line - 1][pc_col - 1] = PC_2;
+
+    //斜め左下と右上
+    if (board[pc_line - 1][pc_col + 1] == ME_1 && board[pc_line - 2][pc_col + 2] == PC_2) board[pc_line - 1][pc_col + 1] = PC_2;
+    if (board[pc_line + 1][pc_col - 1] == ME_1 && board[pc_line + 2][pc_col - 2] == PC_2) board[pc_line + 1][pc_col - 1] = PC_2;
+
+
+
+
     //縦列　下に×が存在
     
-    if (board[pc_line][pc_col + 1] == ME_1
-        && board[pc_line][pc_col + 2] == PC_2)
+    if (board[pc_line][pc_col + 1] == ME_1 && board[pc_line][pc_col + 2] == PC_2)
         board[pc_line][pc_col + 1] = PC_2;
                 
             
-    if (board[pc_line][pc_col + 1] == ME_1
-            && board[pc_line][pc_col + 2] == ME_1
+    if (board[pc_line][pc_col + 1] == ME_1 && board[pc_line][pc_col + 2] == ME_1
             && board[pc_line][pc_col + 3] == PC_2)
-            board[pc_line][pc_col + 1] = PC_2,
-            board[pc_line][pc_col + 2] = PC_2;
+            board[pc_line][pc_col + 1] = PC_2, board[pc_line][pc_col + 2] = PC_2;
                 
     //縦列　上に×が存在
     
-    if (board[pc_line][pc_col - 1] == ME_1
-        && board[pc_line][pc_col - 2] == PC_2)
+    if (board[pc_line][pc_col - 1] == ME_1 && board[pc_line][pc_col - 2] == PC_2)
             board[pc_line][pc_col - 1] = PC_2;
                                 
             
-    if (board[pc_line][pc_col - 1] == ME_1
-            && board[pc_line][pc_col - 2] == ME_1
+    if (board[pc_line][pc_col - 1] == ME_1 && board[pc_line][pc_col - 2] == ME_1
             && board[pc_line][pc_col - 3] == PC_2)
-            board[pc_line][pc_col - 1] = PC_2,
-            board[pc_line][pc_col - 2] = PC_2;
+            board[pc_line][pc_col - 1] = PC_2, board[pc_line][pc_col - 2] = PC_2;
                 
     //横列　右に×が存在
     
-    if (board[pc_line + 1  ][pc_col] == ME_1
-        && board[pc_line + 2][pc_col] == PC_2)
+    if (board[pc_line + 1  ][pc_col] == ME_1 && board[pc_line + 2][pc_col] == PC_2)
         board[pc_line + 1  ][pc_col] = PC_2;
                                 
             
-    if (board[pc_line + 1][pc_col ]== ME_1
-            && board[pc_line + 2][pc_col] == ME_1
+    if (board[pc_line + 1][pc_col ]== ME_1 && board[pc_line + 2][pc_col] == ME_1
             && board[pc_line + 3][pc_col] == PC_2)
-            board[pc_line + 1  ][pc_col] = PC_2,
-            board[pc_line + 2  ][pc_col] = PC_2;
+            board[pc_line + 1  ][pc_col] = PC_2,board[pc_line + 2  ][pc_col] = PC_2;
                 
     //横列　左に×が存在
     
-    if (board[pc_line - 1  ][pc_col] == ME_1
-        && board[pc_line - 2][pc_col] == PC_2)
+    if (board[pc_line - 1  ][pc_col] == ME_1 && board[pc_line - 2][pc_col] == PC_2)
         board[pc_line - 1][pc_col] = PC_2;
                 
                 
             
-    if (board[pc_line - 1][pc_col ]== ME_1
-            && board[pc_line - 2][pc_col] == ME_1
+    if (board[pc_line - 1][pc_col ]== ME_1 && board[pc_line - 2][pc_col] == ME_1
             && board[pc_line - 3][pc_col] == PC_2)
-            board[pc_line - 1][pc_col] = PC_2,
-            board[pc_line - 2][pc_col] = PC_2;
+            board[pc_line - 1][pc_col] = PC_2, board[pc_line - 2][pc_col] = PC_2;
 
 
+
+    //PCの各値の初期化
     pc_line = -1;
     pc_col = -1;
+    for (int i = 0; i < BOARD_SIDE; i++)
+    {
+        for (int j = 0; j <  BOARD_SIDE; j++)
+        {
+            score_board[j][i] = UNDECIDED_0;
+        }
+        
+    }
+    
 }
