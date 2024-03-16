@@ -3,7 +3,7 @@
 #include "board.h"
 #define FULL_CELL 16
 #define BOARD_SIDE 4
-
+//3/16 変更
 enum board_num {ZERO,ONE,TWO,THREE,FOUR};
 enum status_num {UNDECIDED_0,ME_1,PC_2};
 int board[BOARD_SIDE][BOARD_SIDE] = {UNDECIDED_0};
