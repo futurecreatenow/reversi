@@ -3,7 +3,7 @@
 #include "board.h"
 #define FULL_CELL 16
 #define BOARD_SIDE 4
-//3/16 
+
 enum board_num {ZERO,ONE,TWO,THREE,FOUR};
 enum status_num {UNDECIDED_0,ME_1,PC_2};
 int board[BOARD_SIDE][BOARD_SIDE] = {UNDECIDED_0};
@@ -11,6 +11,8 @@ int score_board[BOARD_SIDE][BOARD_SIDE] = {UNDECIDED_0};
 int pc_line = 0;
 int pc_col = 0;
 bool finish_flag = false;
+bool me_not_put_flag = false;
+bool pc_not_put_flag = false;
 
 void setup(void);
 void show(void);
@@ -34,7 +36,7 @@ void main(void) {
         pc_put(); //pcの碁盤を置く
         show();
         stone_sum(&board);
-    } while (finish_flag == false);
+    } while (finish_flag == false || (me_not_put_flag == true && pc_not_put_flag == true));
     
 
 
@@ -79,7 +81,6 @@ void show(){
 
 void select(struct BOARD *board_){
     bool select_flag = false;
-
     //置ける場所を表示させる>>>branchで作成します
     printf("[line][col]\n");
 
@@ -214,7 +215,12 @@ void select(struct BOARD *board_){
                         
                             
                             select_flag = true;
-
+                if (select_flag == false)
+                {
+                    me_not_put_flag = true;
+                    break;
+                }
+                
             }
 
         else printf("your select is not correct\n");
@@ -371,9 +377,10 @@ void pc_expe(){
             {
             case UNDECIDED_0:
                 //斜め 対角線
-                if (board[0][0] == PC_2 && board[1][1] == ME_1 && board[2][2] == ME_1 && board[3][3] == PC_2) dia_left = dia_left + 2;
-                if (board[3][0] == PC_2 && board[2][1] == ME_1 && board[1][2] == ME_1 && board[3][0] == PC_2) dia_right = dia_right + 2;
-                
+                if (board[0][0] == PC_2 && board[1][1] == ME_1 && board[2][2] == ME_1 ) dia_left = dia_left + 2;
+                if (board[3][0] == PC_2 && board[2][1] == ME_1 && board[1][2] == ME_1 ) dia_right = dia_right + 2;
+                if (board[1][1] == ME_1 && board[2][2] == ME_1 && board[3][3] == PC_2) dia_left = dia_left + 2;
+                if (board[2][1] == ME_1 && board[1][2] == ME_1 && board[3][0] == PC_2) dia_right = dia_right + 2;
                 //斜め右下と左上
                 if (board[j + 1][i + 1] == ME_1 && board[j + 2][i + 2] == PC_2) dia_left++;
                 if (board[j - 1][i - 1] == ME_1 && board[j - 2][i - 2] == PC_2) dia_left++;
@@ -403,6 +410,11 @@ void pc_expe(){
 
                 stone_sum = line_up + line_under + col_right + col_left + dia_right + dia_left;
                 score_board[j][i] = stone_sum;
+                
+
+                //変数をゼロにする
+                stone_sum =  line_up = line_under = col_right = col_left = dia_right = dia_left = 0;
+
 
                 break;
             case ME_1:
@@ -432,6 +444,11 @@ void pc_expe(){
         }
         
     }
+    if (pc_score == 0)
+    {
+        pc_not_put_flag = true;
+    }
+    
 
 
     
@@ -444,23 +461,23 @@ void pc_put(){
     //斜め
     if (pc_line ==  0 && pc_col == 0){
         if (board[1][1] == ME_1 && board[2][2] == ME_1 && board[3][3] == PC_2)
-            board[1][1] == PC_2,board[2][2] == PC_2;
+            board[1][1] = PC_2,board[2][2] = PC_2;
     }
 
 
     if (pc_line ==  3 && pc_col == 3){
-        if (board[1][1] == ME_1 && board[2][2] == ME_1 && board[3][3] == PC_2)
-            board[1][1] == PC_2,board[2][2] == PC_2;
+        if (board[0][0] == PC_2 && board[1][1] == ME_1 && board[2][2] == ME_1)
+            board[1][1] = PC_2,board[2][2] = PC_2;
     }
             
     if (pc_line ==  3 && pc_col == 0){
         if (board[2][1] == ME_1 && board[1][2] == ME_1 && board[0][3] == PC_2)
-            board[2][1] == PC_2,board[1][2] == PC_2;
+            board[2][1] = PC_2,board[1][2] = PC_2;
     }
             
     if (pc_line ==  0 && pc_col == 3){
         if (board[2][1] == ME_1 && board[1][2] == ME_1 && board[3][0] == PC_2)
-            board[2][1] == PC_2,board[1][2] == PC_2;
+            board[2][1] = PC_2,board[1][2] = PC_2;
     }
 
     //斜め右下と左上
